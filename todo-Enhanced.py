@@ -5,7 +5,7 @@ tasks = []
 
 def load_tasks(filename='tasks.json'):
     try:
-        with open(filename, 'r') as file:
+        with open(filename) as file:
             return json.load(file)
     except FileNotFoundError:
         return []
