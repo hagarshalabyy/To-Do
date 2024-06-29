@@ -17,6 +17,7 @@ def save_tasks(filename='tasks.json'):
 def add_task(task, deadline=None):
     tasks.append({"task": task, "deadline": deadline, "completed": False})
     print(f"Task '{task}' added.")
+    save_tasks() 
 
 def list_tasks():
     if not tasks:
@@ -25,20 +26,21 @@ def list_tasks():
         print("Tasks:")
         for i, task in enumerate(tasks, 1):
             status = "Done" if task['completed'] else "Pending"
-            deadline = task['deadline'] if task['deadline'] else "No deadline"
+            deadline = task['deadline'].strftime("%Y-%m-%d") if task['deadline'] else "No deadline"  # Bug: Accessing the 'deadline' attribute directly
             print(f"{i}. {task['task']} (Deadline: {deadline}, Status: {status})")
 
 def mark_task_completed(index):
     try:
         tasks[index]['completed'] = True
         print(f"Task {index + 1} marked as completed.")
+        save_tasks()
     except IndexError:
         print("Invalid task number.")
 
 def main():
     global tasks
     tasks = load_tasks()
-    
+
     while True:
         print("\nTo-Do List")
         print("1. Add task")
@@ -57,13 +59,11 @@ def main():
                 except ValueError:
                     print("Invalid date format. Task will have no deadline.")
             add_task(task, deadline)
-            save_tasks()
         elif choice == '2':
             list_tasks()
         elif choice == '3':
             index = int(input("Enter the task number to mark as completed: ")) - 1
             mark_task_completed(index)
-            save_tasks()
         elif choice == '4':
             print("Exiting...")
             save_tasks()
