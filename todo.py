@@ -17,12 +17,11 @@ def list_tasks():
         print("Tasks:")
         for i, task in enumerate(tasks, 1):
             status = "Done" if task["completed"] else "Pending"
-            deadline = (
-                task["deadline"].strftime("%Y-%m-%d")
-                if task["deadline"]
-                else "No deadline"
-            )  # Bug: Accessing the 'deadline' attribute directly
-            print(f"{i}. {task['task']} (Deadline: {deadline}, Status: {status})")
+            deadline = task["deadline"]
+            if isinstance(deadline, str):
+                deadline = datetime.datetime.strptime(deadline, "%Y-%m-%d").date()
+            deadline_str = deadline.strftime("%Y-%m-%d") if deadline else "No deadline"
+            print(f"{i}. {task['task']} (Deadline: {deadline_str}, Status: {status})")
 
 
 def mark_task_completed(index):
